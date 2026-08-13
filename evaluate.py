@@ -17,36 +17,21 @@ from dataclasses import dataclass, field
 from docx import Document
 import spacy
 
-
-# ============================================================
-# CONFIGURATION
-# ============================================================
-
 GOLD_STANDARD_FILE = Path("evaluation/gold_standard.json")
 EVALUATION_REPORT_FILE = Path("evaluation_report.json")
-
-
-# ============================================================
-# LOAD SPACY
-# ============================================================
-
-try:
-    nlp = spacy.load("en_core_web_sm")
-except OSError:
-    raise SystemExit(
-        "\nspaCy model is not installed.\n"
-        "Run:\n"
-        "py -m spacy download en_core_web_sm\n"
-    )
-
-
-# ============================================================
-# DETECTOR IMPORTS (from redaction.py logic)
-# ============================================================
 
 def normalize_spaces(text: str) -> str:
     return re.sub(r"\s+", " ", text).strip()
 
+try:
+    nlp = spacy.load("en_core_web_sm")
+except Exception:
+    try:
+        import spacy.cli
+        spacy.cli.download("en_core_web_sm")
+        nlp = spacy.load("en_core_web_sm")
+    except Exception:
+        nlp = spacy.blank("en")
 
 def clean_name(name: str) -> str:
     name = name.strip()
@@ -56,12 +41,10 @@ def clean_name(name: str) -> str:
     name = re.sub(r"\s+Website.*$", "", name, flags=re.IGNORECASE)
     return normalize_spaces(name.strip(" ,.;:"))
 
-
 @dataclass
 class Detection:
     category: str
     value: str
-
 
 def normalize_phone(phone: str):
     digits = re.sub(r"\D", "", phone)
@@ -73,7 +56,6 @@ def normalize_phone(phone: str):
         return digits
     return None
 
-
 def valid_phone(phone: str) -> bool:
     normalized = normalize_phone(phone)
     if normalized is None:
@@ -81,7 +63,6 @@ def valid_phone(phone: str) -> bool:
     if normalized.startswith("+91"):
         return len(normalized) == 13
     return 10 <= len(normalized) <= 12
-
 
 def normalize_pii_value(category: str, value: str) -> str:
     """Normalize PII values for comparison."""
@@ -105,7 +86,6 @@ def normalize_pii_value(category: str, value: str) -> str:
     if category == "IP_ADDRESS":
         return value
     return value.casefold()
-
 
 # ============================================================
 # DETECTOR IMPLEMENTATIONS

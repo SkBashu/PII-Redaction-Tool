@@ -1,0 +1,12 @@
+[tool.vercel]
+entrypoint = "app.py"
+
+[project]
+name = "pii-redaction-tool"
+version = "2.0.0"
+description = "PII Redaction and Synthetic Anonymization Tool"
+dependencies = [
+    "python-docx>=0.8.11",
+    "spacy>=3.7.2",
+    "Flask>=3.0.2"
+]

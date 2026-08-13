@@ -27,12 +27,13 @@ SEED = 20260814
 
 try:
     nlp = spacy.load("en_core_web_sm")
-except OSError:
-    raise SystemExit(
-        "\nspaCy model is not installed.\n"
-        "Run:\n"
-        "py -m spacy download en_core_web_sm\n"
-    )
+except Exception:
+    try:
+        import spacy.cli
+        spacy.cli.download("en_core_web_sm")
+        nlp = spacy.load("en_core_web_sm")
+    except Exception:
+        nlp = spacy.blank("en")
 
 
 # ============================================================
