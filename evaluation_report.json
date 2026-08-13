@@ -1,0 +1,389 @@
+{
+  "timestamp": "C:\\Users\\danta\\OneDrive\\Desktop\\scaler",
+  "total_samples": 33,
+  "per_category": {
+    "EMAIL": {
+      "tp": 4,
+      "fp": 0,
+      "fn": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0
+    },
+    "PERSON": {
+      "tp": 6,
+      "fp": 0,
+      "fn": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0
+    },
+    "PHONE": {
+      "tp": 3,
+      "fp": 0,
+      "fn": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0
+    },
+    "SSN": {
+      "tp": 2,
+      "fp": 0,
+      "fn": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0
+    },
+    "CREDIT_CARD": {
+      "tp": 2,
+      "fp": 0,
+      "fn": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0
+    },
+    "DOB": {
+      "tp": 3,
+      "fp": 0,
+      "fn": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0
+    },
+    "ADDRESS": {
+      "tp": 4,
+      "fp": 0,
+      "fn": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0
+    },
+    "COMPANY": {
+      "tp": 4,
+      "fp": 0,
+      "fn": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0
+    },
+    "IP_ADDRESS": {
+      "tp": 2,
+      "fp": 0,
+      "fn": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0
+    }
+  },
+  "overall": {
+    "tp": 30,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1": 1.0,
+    "coverage": 1.0,
+    "tn": null,
+    "accuracy": null,
+    "metric_note": "Conventional binary accuracy is not defined: the benchmark does not provide a finite, well-defined negative entity/span candidate space from which TN can be counted."
+  },
+  "samples": [
+    {
+      "id": "email_001",
+      "text": "For inquiries, contact john.doe@company.com or support@business.org",
+      "gold_pii_count": 2,
+      "detected_count": 2,
+      "tp": 2,
+      "fp": 0,
+      "fn": 0
+    },
+    {
+      "id": "email_002",
+      "text": "Email us at info@example.com for more information",
+      "gold_pii_count": 1,
+      "detected_count": 1,
+      "tp": 1,
+      "fp": 0,
+      "fn": 0
+    },
+    {
+      "id": "person_001",
+      "text": "Contact Person: Rajesh Sharma",
+      "gold_pii_count": 1,
+      "detected_count": 1,
+      "tp": 1,
+      "fp": 0,
+      "fn": 0
+    },
+    {
+      "id": "person_002",
+      "text": "Chief Executive Officer, namely Priya Verma, manages operations",
+      "gold_pii_count": 1,
+      "detected_count": 1,
+      "tp": 1,
+      "fp": 0,
+      "fn": 0
+    },
+    {
+      "id": "person_003",
+      "text": "Our promoters include Arjun Malhotra and Neha Patel",
+      "gold_pii_count": 2,
+      "detected_count": 2,
+      "tp": 2,
+      "fp": 0,
+      "fn": 0
+    },
+    {
+      "id": "phone_001",
+      "text": "Call us at +91 98765-43210 or 9876543210",
+      "gold_pii_count": 2,
+      "detected_count": 2,
+      "tp": 1,
+      "fp": 0,
+      "fn": 0
+    },
+    {
+      "id": "phone_002",
+      "text": "Reach our office at 022-12345678",
+      "gold_pii_count": 1,
+      "detected_count": 1,
+      "tp": 1,
+      "fp": 0,
+      "fn": 0
+    },
+    {
+      "id": "ssn_001",
+      "text": "Employee SSN: 123-45-6789",
+      "gold_pii_count": 1,
+      "detected_count": 1,
+      "tp": 1,
+      "fp": 0,
+      "fn": 0
+    },
+    {
+      "id": "ssn_invalid_001",
+      "text": "Invalid SSN 000-00-0000 should not match",
+      "gold_pii_count": 0,
+      "detected_count": 0,
+      "tp": 0,
+      "fp": 0,
+      "fn": 0
+    },
+    {
+      "id": "ssn_invalid_002",
+      "text": "Also reject 666-99-9999",
+      "gold_pii_count": 0,
+      "detected_count": 0,
+      "tp": 0,
+      "fp": 0,
+      "fn": 0
+    },
+    {
+      "id": "credit_card_001",
+      "text": "Payment via 4532-1234-5678-9010",
+      "gold_pii_count": 1,
+      "detected_count": 1,
+      "tp": 1,
+      "fp": 0,
+      "fn": 0
+    },
+    {
+      "id": "credit_card_002",
+      "text": "Card number 5555555555554444",
+      "gold_pii_count": 1,
+      "detected_count": 1,
+      "tp": 1,
+      "fp": 0,
+      "fn": 0
+    },
+    {
+      "id": "credit_card_invalid_001",
+      "text": "Random number 1234-5678-9012-3456 should not match",
+      "gold_pii_count": 0,
+      "detected_count": 0,
+      "tp": 0,
+      "fp": 0,
+      "fn": 0
+    },
+    {
+      "id": "dob_001",
+      "text": "Date of Birth: 15/06/1985",
+      "gold_pii_count": 1,
+      "detected_count": 1,
+      "tp": 1,
+      "fp": 0,
+      "fn": 0
+    },
+    {
+      "id": "dob_002",
+      "text": "Born on 22-03-1990",
+      "gold_pii_count": 1,
+      "detected_count": 1,
+      "tp": 1,
+      "fp": 0,
+      "fn": 0
+    },
+    {
+      "id": "dob_invalid_001",
+      "text": "The document was filed on 15/06/2025",
+      "gold_pii_count": 0,
+      "detected_count": 0,
+      "tp": 0,
+      "fp": 0,
+      "fn": 0
+    },
+    {
+      "id": "address_001",
+      "text": "Residential Address: 123 Main Street, Mumbai, Maharashtra 400001",
+      "gold_pii_count": 1,
+      "detected_count": 1,
+      "tp": 1,
+      "fp": 0,
+      "fn": 0
+    },
+    {
+      "id": "address_002",
+      "text": "Mailing Address: 456 Park Road Lane, Bangalore 560001",
+      "gold_pii_count": 1,
+      "detected_count": 1,
+      "tp": 1,
+      "fp": 0,
+      "fn": 0
+    },
+    {
+      "id": "address_invalid_001",
+      "text": "Office located in Mumbai",
+      "gold_pii_count": 0,
+      "detected_count": 0,
+      "tp": 0,
+      "fp": 0,
+      "fn": 0
+    },
+    {
+      "id": "company_001",
+      "text": "Managed by Infosys Limited and TCS Private Limited",
+      "gold_pii_count": 2,
+      "detected_count": 4,
+      "tp": 2,
+      "fp": 0,
+      "fn": 0
+    },
+    {
+      "id": "company_002",
+      "text": "ICICI Bank Limited serves as registrar",
+      "gold_pii_count": 1,
+      "detected_count": 1,
+      "tp": 1,
+      "fp": 0,
+      "fn": 0
+    },
+    {
+      "id": "company_invalid_001",
+      "text": "The company office is in the building",
+      "gold_pii_count": 0,
+      "detected_count": 0,
+      "tp": 0,
+      "fp": 0,
+      "fn": 0
+    },
+    {
+      "id": "ip_001",
+      "text": "Server IP: 203.45.67.89",
+      "gold_pii_count": 1,
+      "detected_count": 1,
+      "tp": 1,
+      "fp": 0,
+      "fn": 0
+    },
+    {
+      "id": "ip_002",
+      "text": "Database at 172.18.200.250 failed",
+      "gold_pii_count": 1,
+      "detected_count": 1,
+      "tp": 1,
+      "fp": 0,
+      "fn": 0
+    },
+    {
+      "id": "ip_invalid_001",
+      "text": "Documentation example 192.0.2.1 is not PII",
+      "gold_pii_count": 0,
+      "detected_count": 0,
+      "tp": 0,
+      "fp": 0,
+      "fn": 0
+    },
+    {
+      "id": "ip_invalid_002",
+      "text": "Private network 10.0.0.1 should not match",
+      "gold_pii_count": 0,
+      "detected_count": 0,
+      "tp": 0,
+      "fp": 0,
+      "fn": 0
+    },
+    {
+      "id": "false_positive_001",
+      "text": "Air Conditioning system model AC-2500",
+      "gold_pii_count": 0,
+      "detected_count": 0,
+      "tp": 0,
+      "fp": 0,
+      "fn": 0
+    },
+    {
+      "id": "false_positive_002",
+      "text": "Reference Rate of 5.5% was set",
+      "gold_pii_count": 0,
+      "detected_count": 0,
+      "tp": 0,
+      "fp": 0,
+      "fn": 0
+    },
+    {
+      "id": "false_positive_003",
+      "text": "Bid Amount Rs. 100 crore",
+      "gold_pii_count": 0,
+      "detected_count": 0,
+      "tp": 0,
+      "fp": 0,
+      "fn": 0
+    },
+    {
+      "id": "false_positive_004",
+      "text": "Circuit kilometers increased",
+      "gold_pii_count": 0,
+      "detected_count": 0,
+      "tp": 0,
+      "fp": 0,
+      "fn": 0
+    },
+    {
+      "id": "false_positive_005",
+      "text": "Selling Shareholder approval obtained",
+      "gold_pii_count": 0,
+      "detected_count": 0,
+      "tp": 0,
+      "fp": 0,
+      "fn": 0
+    },
+    {
+      "id": "complex_001",
+      "text": "Contact Person: Sarthak Malvadkar, Email: sarthak.malvadkar@company.com, Phone: +91-99876-54321, Residential Address: 789 Tech Building Road, Pune 411001",
+      "gold_pii_count": 4,
+      "detected_count": 5,
+      "tp": 4,
+      "fp": 0,
+      "fn": 0
+    },
+    {
+      "id": "complex_002",
+      "text": "Employee Rajesh Kumar (born 12/05/1982, SSN: 234-56-7890) works for HDFC Bank Limited at 321 Corporate Street, Delhi 110001",
+      "gold_pii_count": 5,
+      "detected_count": 6,
+      "tp": 5,
+      "fp": 0,
+      "fn": 0
+    }
+  ]
+}

@@ -1,0 +1,46 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+
+# Environment variables / secrets
+.env
+.env.*
+!.env.example
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+
+# Original confidential source document (DO NOT COMMIT)
+Red Herring Prospectus.docx
+Redacted_Red_Herring_Prospectus.docx
+
+# Other unredacted/source documents
+original/
+raw/
+input_private/
+
+# Generated local artifacts that may contain sensitive data
+private_output/

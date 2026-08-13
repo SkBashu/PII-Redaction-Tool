@@ -1,0 +1,218 @@
+[
+  {
+    "id": "email_001",
+    "text": "For inquiries, contact john.doe@company.com or support@business.org",
+    "pii": [
+      {"category": "EMAIL", "value": "john.doe@company.com"},
+      {"category": "EMAIL", "value": "support@business.org"}
+    ]
+  },
+  {
+    "id": "email_002",
+    "text": "Email us at info@example.com for more information",
+    "pii": [
+      {"category": "EMAIL", "value": "info@example.com"}
+    ]
+  },
+  {
+    "id": "person_001",
+    "text": "Contact Person: Rajesh Sharma",
+    "pii": [
+      {"category": "PERSON", "value": "Rajesh Sharma"}
+    ]
+  },
+  {
+    "id": "person_002",
+    "text": "Chief Executive Officer, namely Priya Verma, manages operations",
+    "pii": [
+      {"category": "PERSON", "value": "Priya Verma"}
+    ]
+  },
+  {
+    "id": "person_003",
+    "text": "Our promoters include Arjun Malhotra and Neha Patel",
+    "pii": [
+      {"category": "PERSON", "value": "Arjun Malhotra"},
+      {"category": "PERSON", "value": "Neha Patel"}
+    ]
+  },
+  {
+    "id": "phone_001",
+    "text": "Call us at +91 98765-43210 or 9876543210",
+    "pii": [
+      {"category": "PHONE", "value": "+91 98765-43210"},
+      {"category": "PHONE", "value": "9876543210"}
+    ]
+  },
+  {
+    "id": "phone_002",
+    "text": "Reach our office at 022-12345678",
+    "pii": [
+      {"category": "PHONE", "value": "022-12345678"}
+    ]
+  },
+  {
+    "id": "ssn_001",
+    "text": "Employee SSN: 123-45-6789",
+    "pii": [
+      {"category": "SSN", "value": "123-45-6789"}
+    ]
+  },
+  {
+    "id": "ssn_invalid_001",
+    "text": "Invalid SSN 000-00-0000 should not match",
+    "pii": []
+  },
+  {
+    "id": "ssn_invalid_002",
+    "text": "Also reject 666-99-9999",
+    "pii": []
+  },
+  {
+    "id": "credit_card_001",
+    "text": "Payment via 4532-1234-5678-9010",
+    "pii": [
+      {"category": "CREDIT_CARD", "value": "4532-1234-5678-9010"}
+    ]
+  },
+  {
+    "id": "credit_card_002",
+    "text": "Card number 5555555555554444",
+    "pii": [
+      {"category": "CREDIT_CARD", "value": "5555555555554444"}
+    ]
+  },
+  {
+    "id": "credit_card_invalid_001",
+    "text": "Random number 1234-5678-9012-3456 should not match",
+    "pii": []
+  },
+  {
+    "id": "dob_001",
+    "text": "Date of Birth: 15/06/1985",
+    "pii": [
+      {"category": "DOB", "value": "15/06/1985"}
+    ]
+  },
+  {
+    "id": "dob_002",
+    "text": "Born on 22-03-1990",
+    "pii": [
+      {"category": "DOB", "value": "22-03-1990"}
+    ]
+  },
+  {
+    "id": "dob_invalid_001",
+    "text": "The document was filed on 15/06/2025",
+    "pii": []
+  },
+  {
+    "id": "address_001",
+    "text": "Residential Address: 123 Main Street, Mumbai, Maharashtra 400001",
+    "pii": [
+      {"category": "ADDRESS", "value": "123 Main Street, Mumbai, Maharashtra 400001"}
+    ]
+  },
+  {
+    "id": "address_002",
+    "text": "Mailing Address: 456 Park Road Lane, Bangalore 560001",
+    "pii": [
+      {"category": "ADDRESS", "value": "456 Park Road Lane, Bangalore 560001"}
+    ]
+  },
+  {
+    "id": "address_invalid_001",
+    "text": "Office located in Mumbai",
+    "pii": []
+  },
+  {
+    "id": "company_001",
+    "text": "Managed by Infosys Limited and TCS Private Limited",
+    "pii": [
+      {"category": "COMPANY", "value": "Infosys Limited"},
+      {"category": "COMPANY", "value": "TCS Private Limited"}
+    ]
+  },
+  {
+    "id": "company_002",
+    "text": "ICICI Bank Limited serves as registrar",
+    "pii": [
+      {"category": "COMPANY", "value": "ICICI Bank Limited"}
+    ]
+  },
+  {
+    "id": "company_invalid_001",
+    "text": "The company office is in the building",
+    "pii": []
+  },
+  {
+    "id": "ip_001",
+    "text": "Server IP: 203.45.67.89",
+    "pii": [
+      {"category": "IP_ADDRESS", "value": "203.45.67.89"}
+    ]
+  },
+  {
+    "id": "ip_002",
+    "text": "Database at 172.18.200.250 failed",
+    "pii": [
+      {"category": "IP_ADDRESS", "value": "172.18.200.250"}
+    ]
+  },
+  {
+    "id": "ip_invalid_001",
+    "text": "Documentation example 192.0.2.1 is not PII",
+    "pii": []
+  },
+  {
+    "id": "ip_invalid_002",
+    "text": "Private network 10.0.0.1 should not match",
+    "pii": []
+  },
+  {
+    "id": "false_positive_001",
+    "text": "Air Conditioning system model AC-2500",
+    "pii": []
+  },
+  {
+    "id": "false_positive_002",
+    "text": "Reference Rate of 5.5% was set",
+    "pii": []
+  },
+  {
+    "id": "false_positive_003",
+    "text": "Bid Amount Rs. 100 crore",
+    "pii": []
+  },
+  {
+    "id": "false_positive_004",
+    "text": "Circuit kilometers increased",
+    "pii": []
+  },
+  {
+    "id": "false_positive_005",
+    "text": "Selling Shareholder approval obtained",
+    "pii": []
+  },
+  {
+    "id": "complex_001",
+    "text": "Contact Person: Sarthak Malvadkar, Email: sarthak.malvadkar@company.com, Phone: +91-99876-54321, Residential Address: 789 Tech Building Road, Pune 411001",
+    "pii": [
+      {"category": "PERSON", "value": "Sarthak Malvadkar"},
+      {"category": "EMAIL", "value": "sarthak.malvadkar@company.com"},
+      {"category": "PHONE", "value": "+91-99876-54321"},
+      {"category": "ADDRESS", "value": "789 Tech Building Road, Pune 411001"}
+    ]
+  },
+  {
+    "id": "complex_002",
+    "text": "Employee Rajesh Kumar (born 12/05/1982, SSN: 234-56-7890) works for HDFC Bank Limited at 321 Corporate Street, Delhi 110001",
+    "pii": [
+      {"category": "PERSON", "value": "Rajesh Kumar"},
+      {"category": "DOB", "value": "12/05/1982"},
+      {"category": "SSN", "value": "234-56-7890"},
+      {"category": "COMPANY", "value": "HDFC Bank Limited"},
+      {"category": "ADDRESS", "value": "321 Corporate Street, Delhi 110001"}
+    ]
+  }
+]
