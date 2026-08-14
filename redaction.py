@@ -28,12 +28,7 @@ SEED = 20260814
 try:
     nlp = spacy.load("en_core_web_sm")
 except Exception:
-    try:
-        import spacy.cli
-        spacy.cli.download("en_core_web_sm")
-        nlp = spacy.load("en_core_web_sm")
-    except Exception:
-        nlp = spacy.blank("en")
+    nlp = spacy.blank("en")
 
 
 # ============================================================

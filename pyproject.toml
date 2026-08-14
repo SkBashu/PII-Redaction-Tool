@@ -1,6 +1,3 @@
-[tool.vercel]
-entrypoint = "app.py"
-
 [project]
 name = "pii-redaction-tool"
 version = "2.0.0"

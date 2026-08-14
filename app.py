@@ -1,32 +1,40 @@
 """
 Vercel Serverless Application & API for PII Redaction Tool.
 Exposes Web UI and REST API endpoints for text snippet redaction,
-DOCX document redaction, evaluation benchmark runner, and health checks.
+DOCX document redaction, evaluation benchmark runner, and health/info/demo endpoints.
 """
 
 import io
-import json
 import os
 import tempfile
-from pathlib import Path
+import re
+from functools import lru_cache
 
 from flask import Flask, jsonify, render_template_string, request, send_file
-from docx import Document
-
-from redaction import (
-    Detection,
-    EntityRegistry,
-    SyntheticGenerator,
-    assign_replacements,
-    build_replacement_map,
-    detect_all,
-    redact_document,
-    scan_for_pii_leakage,
-    validate_replacement,
-)
-from evaluate import evaluate_detectors
 
 app = Flask(__name__)
+
+
+@lru_cache(maxsize=1)
+def get_redaction_core():
+    """Load the redaction engine only for requests that need it."""
+    from redaction import (
+        EntityRegistry,
+        assign_replacements,
+        build_replacement_map,
+        detect_all,
+        redact_document,
+    )
+
+    return EntityRegistry, assign_replacements, build_replacement_map, detect_all, redact_document
+
+
+@lru_cache(maxsize=1)
+def get_evaluator():
+    """Load the benchmark code only when evaluation is requested."""
+    from evaluate import evaluate_detectors
+
+    return evaluate_detectors
 
 # ============================================================
 # EMBEDDED WEB INTERFACE HTML/CSS/JS
@@ -166,6 +174,7 @@ HTML_TEMPLATE = """
             justify-content: center;
             gap: 0.75rem;
             margin-bottom: 2rem;
+            flex-wrap: wrap;
         }
 
         .tab-btn {
@@ -348,7 +357,7 @@ HTML_TEMPLATE = """
             <div class="logo-icon">🛡️</div>
             <span>PII Redaction Tool</span>
         </div>
-        <div class="badge-live">Vercel API Live</div>
+        <div class="badge-live">Vercel Production Active</div>
     </header>
 
     <main>
@@ -373,7 +382,7 @@ HTML_TEMPLATE = """
                         <textarea id="inputText" placeholder="Paste sample text containing emails, phone numbers, names, companies, addresses, SSNs, credit cards..."></textarea>
                         <div style="margin-top: 1rem;">
                             <button class="btn-primary" onclick="redactText()">Redact Text Now</button>
-                            <button class="tab-btn" onclick="loadSampleText()" style="margin-left: 0.5rem;">Load Sample Text</button>
+                            <button class="tab-btn" onclick="loadSampleText()" style="margin-left: 0.5rem;">Load Demo Text</button>
                         </div>
                     </div>
                     <div>
@@ -467,6 +476,21 @@ HTML_TEMPLATE = """
                     </thead>
                     <tbody>
                         <tr>
+                            <td><span class="pill" style="background: rgba(99,102,241,0.15); color: #818cf8;">GET</span></td>
+                            <td><code>/api/health</code></td>
+                            <td>Instant status check (<code>{"status": "ok"}</code>).</td>
+                        </tr>
+                        <tr>
+                            <td><span class="pill" style="background: rgba(99,102,241,0.15); color: #818cf8;">GET</span></td>
+                            <td><code>/api/info</code></td>
+                            <td>Returns service name, version, and 9 supported PII categories.</td>
+                        </tr>
+                        <tr>
+                            <td><span class="pill" style="background: rgba(99,102,241,0.15); color: #818cf8;">GET</span></td>
+                            <td><code>/api/demo</code></td>
+                            <td>Returns synthetic demo dataset for testing.</td>
+                        </tr>
+                        <tr>
                             <td><span class="pill" style="background: rgba(16,185,129,0.15); color: #34d399;">POST</span></td>
                             <td><code>/api/redact-text</code></td>
                             <td>Accepts JSON <code>{"text": "..."}</code>, returns redacted text + entity mapping.</td>
@@ -480,11 +504,6 @@ HTML_TEMPLATE = """
                             <td><span class="pill" style="background: rgba(99,102,241,0.15); color: #818cf8;">GET</span></td>
                             <td><code>/api/evaluate</code></td>
                             <td>Runs benchmark detector evaluation and returns JSON precision/recall/F1 metrics.</td>
-                        </tr>
-                        <tr>
-                            <td><span class="pill" style="background: rgba(99,102,241,0.15); color: #818cf8;">GET</span></td>
-                            <td><code>/api/health</code></td>
-                            <td>Returns service status and API version.</td>
                         </tr>
                     </tbody>
                 </table>
@@ -504,16 +523,22 @@ HTML_TEMPLATE = """
             event.target.classList.add('active');
         }
 
-        function loadSampleText() {
-            document.getElementById('inputText').value = `Contact Person: Rajesh Sharma (Chief Executive Officer)
-Email: rajesh.sharma@company.com
-Phone: +91 98765-43210
-Company: Infosys Limited
-Address: 123 Main Street, Mumbai, Maharashtra 400001
-SSN: 123-45-6789
-Credit Card: 4532-1234-5678-9010
+        async function loadSampleText() {
+            try {
+                const res = await fetch('/api/demo');
+                const data = await res.json();
+                document.getElementById('inputText').value = data.sample_text || '';
+            } catch (err) {
+                document.getElementById('inputText').value = `Contact Person: Riya Sharma (Chief Executive Officer)
+Email: riya.sharma@example.com
+Phone: +91 9000000000
+Company: Nexus Limited
+Address: 123 Example Road, Sample City
+SSN: 192-34-5678
+Credit Card: 4111-2024-6789-1234
 Date of Birth: 15/06/1985
-IP Address: 203.45.67.89`;
+IP Address: 192.0.2.123`;
+            }
         }
 
         async function redactText() {
@@ -634,11 +659,41 @@ def home():
 
 @app.route("/api/health", methods=["GET"])
 def health():
-    """Health check endpoint."""
+    """Instant health check endpoint."""
     return jsonify({
-        "status": "ok",
+        "status": "ok"
+    })
+
+
+@app.route("/api/info", methods=["GET"])
+def info():
+    """Return service info and supported PII categories."""
+    return jsonify({
         "service": "PII Redaction Tool",
-        "version": "2.0.0"
+        "version": "2.0.0",
+        "supported_categories": [
+            "PERSON", "EMAIL", "PHONE", "COMPANY", "ADDRESS",
+            "SSN", "CREDIT_CARD", "DOB", "IP_ADDRESS"
+        ]
+    })
+
+
+@app.route("/api/demo", methods=["GET"])
+def demo():
+    """Return safe synthetic demo dataset."""
+    return jsonify({
+        "status": "success",
+        "sample_text": (
+            "Contact Person: Riya Sharma (Chief Executive Officer)\n"
+            "Email: riya.sharma@example.com\n"
+            "Phone: +91 9000000000\n"
+            "Company: Nexus Limited\n"
+            "Address: 123 Example Road, Sample City\n"
+            "SSN: 192-34-5678\n"
+            "Credit Card: 4111-2024-6789-1234\n"
+            "Date of Birth: 15/06/1985\n"
+            "IP Address: 192.0.2.123"
+        )
     })
 
 
@@ -646,6 +701,7 @@ def health():
 def api_redact_text():
     """Redact raw text snippet."""
     try:
+        EntityRegistry, assign_replacements, build_replacement_map, detect_all, _ = get_redaction_core()
         data = request.get_json(force=True) or {}
         text = data.get("text", "")
         if not text:
@@ -672,7 +728,7 @@ def api_redact_text():
             entity_list.append({
                 "entity_id": e.entity_id,
                 "category": e.category,
-                "surface": e.surfaces[0] if e.surfaces else "",
+                "surface": next(iter(e.surfaces), "") if e.surfaces else "",
                 "replacement": e.replacement,
                 "confidence": e.confidence
             })
@@ -683,13 +739,15 @@ def api_redact_text():
             "entities_count": len(entity_list),
             "entities": entity_list
         })
-    except Exception as ex:
-        return jsonify({"status": "error", "message": str(ex)}), 500
+    except Exception:
+        return jsonify({"status": "error", "message": "Redaction could not be completed"}), 500
 
 
 @app.route("/api/redact-docx", methods=["POST"])
 def api_redact_docx():
-    """Redact uploaded DOCX file."""
+    """Redact uploaded DOCX file safely using ephemeral /tmp files."""
+    temp_in_path = None
+    temp_out_path = None
     try:
         if "file" not in request.files:
             return jsonify({"status": "error", "message": "No file uploaded"}), 400
@@ -698,8 +756,16 @@ def api_redact_docx():
         if not file.filename.endswith(".docx"):
             return jsonify({"status": "error", "message": "Only .docx files are supported"}), 400
 
-        # Read into memory / temp file
-        doc = Document(io.BytesIO(file.read()))
+        # Read into ephemeral temporary file in /tmp
+        temp_dir = tempfile.gettempdir()
+        temp_in_path = os.path.join(temp_dir, f"upload_{os.urandom(8).hex()}.docx")
+        temp_out_path = os.path.join(temp_dir, f"redacted_{os.urandom(8).hex()}.docx")
+
+        file.save(temp_in_path)
+
+        from docx import Document
+        EntityRegistry, assign_replacements, _, detect_all, redact_document = get_redaction_core()
+        doc = Document(temp_in_path)
 
         registry = EntityRegistry()
         for p in doc.paragraphs:
@@ -716,24 +782,30 @@ def api_redact_docx():
         assign_replacements(registry)
         redact_document(doc, registry)
 
-        out_io = io.BytesIO()
-        doc.save(out_io)
-        out_io.seek(0)
+        doc.save(temp_out_path)
+
+        with open(temp_out_path, "rb") as f:
+            out_bytes = f.read()
 
         return send_file(
-            out_io,
+            io.BytesIO(out_bytes),
             mimetype="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
             as_attachment=True,
             download_name=f"Redacted_{file.filename}"
         )
-    except Exception as ex:
-        return jsonify({"status": "error", "message": str(ex)}), 500
+    except Exception:
+        return jsonify({"status": "error", "message": "DOCX redaction could not be completed"}), 500
+    finally:
+        for path in (temp_in_path, temp_out_path):
+            if path and os.path.exists(path):
+                os.remove(path)
 
 
 @app.route("/api/evaluate", methods=["GET"])
 def api_evaluate():
     """Run gold-standard detector evaluation."""
     try:
+        evaluate_detectors = get_evaluator()
         category_metrics, overall, sample_results = evaluate_detectors()
         return jsonify({
             "status": "success",
@@ -744,8 +816,17 @@ def api_evaluate():
                 "precision": overall.precision,
                 "recall": overall.recall,
                 "f1": overall.f1,
-                "coverage": overall.f1,
-                "accuracy": "NOT VALID"
+                "coverage": (
+                    overall.tp / (overall.tp + overall.fp + overall.fn)
+                    if (overall.tp + overall.fp + overall.fn)
+                    else 0.0
+                ),
+                "tn": None,
+                "accuracy": None,
+                "metric_note": (
+                    "Conventional binary accuracy is not defined because the "
+                    "benchmark has no finite negative entity/span candidate space."
+                ),
             },
             "per_category": {
                 cat: {
@@ -759,8 +840,8 @@ def api_evaluate():
                 for cat, m in category_metrics.items()
             }
         })
-    except Exception as ex:
-        return jsonify({"status": "error", "message": str(ex)}), 500
+    except Exception:
+        return jsonify({"status": "error", "message": "Evaluation could not be completed"}), 500
 
 
 # Export app for Vercel
